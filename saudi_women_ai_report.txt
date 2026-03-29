@@ -1,0 +1,454 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界が学ぶべきモデル：サウジアラビアの女性AIリーダー育成戦略</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Modern Sand & Emerald (Neutral backgrounds, Emerald Green for growth/Saudi identity, Slate for text) -->
+    <!-- Application Structure Plan: The SPA uses a narrative, single-page scroll structure to guide the user from the global problem to Saudi Arabia's foundational efforts, policy changes, and ultimate success. 
+         1. Hero: Sets the premise.
+         2. Global Context: Highlights the disparity (Why it matters).
+         3. Foundational Investment: Shows the history of education.
+         4. Policy Catalyst (Vision 2030): Visualizes the rapid workforce change.
+         5. AI Boom & Global Leadership: Highlights current achievements and investments.
+         This linear narrative approach is chosen because the source report tells a chronological and cause-and-effect story (Education -> Vision 2030 -> Current AI Dominance). -->
+    <!-- Visualization & Content Choices: 
+         - Global Gap -> Doughnut Chart (Chart.js): Clearly shows the 1-in-5 ratio to emphasize the problem.
+         - Labor Force Growth -> Bar Chart (Chart.js): Compares past, goal, and actual participation rates to show the impact of Vision 2030.
+         - Key Stats -> Interactive Data Cards (HTML/JS): Hover effects to reveal context for large numbers ($9.1B, 666k, 250k).
+         - NO SVG/Mermaid used. All visuals are HTML/CSS or Canvas. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+
+
+        .nav-link {
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #10b981;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 font-bold text-xl text-emerald-600">
+                    SAUDI AI VISION
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('context')" class="nav-link text-slate-600 font-medium">背景</button>
+                    <button onclick="scrollToSection('foundation')" class="nav-link text-slate-600 font-medium">教育基盤</button>
+                    <button onclick="scrollToSection('catalyst')" class="nav-link text-slate-600 font-medium">Vision 2030</button>
+                    <button onclick="scrollToSection('leadership')" class="nav-link text-slate-600 font-medium">現在の成果</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <header class="bg-slate-900 text-white pt-24 pb-32 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-500 via-slate-900 to-slate-900"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10 fade-in">
+            <span class="inline-block py-1 px-3 rounded-full bg-emerald-500/20 text-emerald-300 text-sm font-semibold mb-4 tracking-wider">SPECIAL REPORT</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                「世界が学ぶべきモデル」<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">新世代の女性AIリーダー</span>を育成する<br>サウジアラビアの戦略
+            </h1>
+            <p class="text-xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+                ビジョン2030の目標に後押しされ、サウジアラビアはデジタル時代における包括性の新たな世界標準を開拓しています。政府と民間が一体となり、人工知能ルネッサンスの最前線に立つ女性たちをどのように育成しているのか、その軌跡を紐解きます。
+            </p>
+        </div>
+    </header>
+
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 pb-24">
+
+
+        <section id="context" class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-16 fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-4">世界的な課題：AI分野における多様性の欠如</h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    このセクションでは、サウジアラビアの取り組みの背景となる世界的な現状を提示します。AIという最先端分野において、世界は依然として大きな男女格差に直面しています。この現状を理解することで、サウジアラビアの戦略がいかに異例かつ先進的であるかが浮き彫りになります。
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-slate-700 text-lg mb-6">
+                        UNESCOとUN Womenの報告によると、世界的にAI分野は大きな多様性の危機に直面しています。この分野で専門的な役割を担っている女性の割合は非常に低く、技術開発における偏りが懸念されています。
+                    </p>
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl">
+                        <h3 class="font-bold text-slate-800 mb-2 text-xl">グローバルAI専門職の現状</h3>
+                        <p class="text-4xl font-extrabold text-slate-800 mb-2">5人に1人 <span class="text-lg text-slate-500 font-normal">のみが女性</span></p>
+                        <p class="text-sm text-slate-500">※UNESCOおよびUN Womenレポートに基づく</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="chart-container">
+                        <canvas id="globalGapChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="foundation" class="mb-16 fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-4">転換の土台：数十年にわたる教育への投資</h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    サウジアラビアのAI分野での躍進は一朝一夕に成し遂げられたものではありません。ここでは、現在の成功の基盤となった過去の教育政策と意図的な投資について解説します。留学支援や国内の女子大学の充実が、いかにして高度な人材プールを形成したかを探ります。
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="stat-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between cursor-pointer" onclick="toggleDetails('edu-1')">
+                    <div>
+                        <div class="text-emerald-500 text-3xl mb-4">✈️</div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">大規模な留学支援</h3>
+                        <p class="text-3xl font-extrabold text-emerald-600 mb-4">250,000<span class="text-lg text-slate-500 font-medium">人以上</span></p>
+                    </div>
+                    <p class="text-slate-600 text-sm" id="edu-1">2005年開始のアブドゥラー国王奨学金プログラム等を通じ、男女問わず海外で高等教育を受ける機会を提供。Humain社のAlowisheq副社長も「基礎は奨学金によって築かれた」と語ります。</p>
+                </div>
+
+
+                <div class="stat-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between cursor-pointer" onclick="toggleDetails('edu-2')">
+                    <div>
+                        <div class="text-emerald-500 text-3xl mb-4">🎓</div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">世界最大の女子大学</h3>
+                        <p class="text-2xl font-bold text-emerald-600 mb-4">STEM分野の強化</p>
+                    </div>
+                    <p class="text-slate-600 text-sm" id="edu-2">リヤドのヌーラ・ビント・アブドゥルラフマーン王女大学は、数十年にわたりSTEM、医学、工学の分野で優秀な女性卒業生を輩出し続けています。</p>
+                </div>
+
+
+                <div class="stat-card bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between cursor-pointer" onclick="toggleDetails('edu-3')">
+                    <div>
+                        <div class="text-emerald-500 text-3xl mb-4">📈</div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">歴史的逆転</h3>
+                        <p class="text-3xl font-extrabold text-emerald-600 mb-4">2017<span class="text-lg text-slate-500 font-medium">年</span></p>
+                    </div>
+                    <p class="text-slate-600 text-sm" id="edu-3">教育への投資の結果、2017年にはサウジアラビアの女子大学卒業生数が男子卒業生を上回るという大きなマイルストーンを達成しました。</p>
+                </div>
+            </div>
+            <p class="text-center text-sm text-slate-400 mt-4">※カードをタップして詳細を確認</p>
+        </section>
+
+
+        <section id="catalyst" class="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-16 fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-4">真の転機：「ビジョン2030」による障壁撤廃</h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    高い教育を受けた女性たちが労働市場に参画するための制度的改革を示します。ムハンマド・ビン・サルマン皇太子が主導する「ビジョン2030」が、いかにして社会構造の障壁を取り除き、驚異的なペースで女性の労働参加を促進したかをデータで視覚化します。
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="chart-container">
+                        <canvas id="laborForceChart"></canvas>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">巨大な未開発資源の活用</h3>
+                    <p class="text-slate-700 mb-4">
+                        かつて、サウジアラビアの女性の50％以上が大卒でありながら、労働力としては十分に活用されていませんでした。2016年に発表された「ビジョン2030」は、この状況を打破する劇的な改革をもたらしました。
+                    </p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2">✔</span>
+                            <span class="text-slate-700"><strong>制度改革：</strong> 2017年の運転禁止解除、職場での反ハラスメント法導入。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2">✔</span>
+                            <span class="text-slate-700"><strong>身分法改正：</strong> 女性が世帯主として行動し、事業を管理し、独立して旅行可能に。</span>
+                        </li>
+                    </ul>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
+                        <p class="text-emerald-800 font-medium">
+                            結果として、労働参加率の目標（30%）を前倒しで達成し、2025年までに36％を突破するという「期待以上」の成果を生み出しました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="leadership" class="mb-16 fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-4">AIルネッサンス：世界第1位の実績と未来への投資</h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    これまでの教育と制度改革が結実した現在の姿を示します。最新のデータや国際的な評価を通じて、サウジアラビアがいかにしてAI教育において世界をリードし、巨額の投資を行ってグローバルなプレゼンスを確立しているかをハイライトします。
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-slate-800 text-white p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-500 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                    <p class="text-emerald-400 font-semibold mb-2 tracking-wide uppercase">スタンフォード大学 AI指数 (2025年)</p>
+                    <h3 class="text-2xl font-bold mb-4">女性のAIエンパワーメント世界第1位</h3>
+                    <div class="flex items-baseline space-x-2">
+                        <span class="text-5xl font-extrabold text-white">666,000</span>
+                        <span class="text-xl text-slate-300">人以上</span>
+                    </div>
+                    <p class="mt-4 text-slate-300 text-sm leading-relaxed">
+                        わずか1年間でデータとAIの訓練を受けた女性の数。これにより「AI経済が機能するために必要な大量導入層が形成された」と評価されています。
+                    </p>
+                </div>
+
+
+                <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-center shadow-sm relative overflow-hidden group">
+                    <p class="text-emerald-600 font-semibold mb-2 tracking-wide uppercase">加速する投資と資金調達 (2024年)</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">新技術への政府支出 <span class="text-emerald-500">+56%</span></h3>
+                    <div class="mb-2">
+                        <p class="text-sm text-slate-500 font-medium mb-1">AI企業が確保した資金</p>
+                        <p class="text-4xl font-extrabold text-slate-800">91億<span class="text-2xl font-bold">ドル</span></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="bg-emerald-50 rounded-2xl p-8 border border-emerald-100">
+                <h3 class="text-xl font-bold text-slate-800 mb-6 text-center">国際的なコラボレーションとプレゼンス</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-emerald-700 mb-2">Elevate Initiative</h4>
+                        <p class="text-slate-600 text-sm">
+                            サウジアラビア・データ・AI庁(SDAIA)とGoogle Cloudによる共同プログラム。5年間で新興市場の25,000人以上の女性にAIと機械学習の専門トレーニングを提供。
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-emerald-700 mb-2">グローバルパートナーシップ</h4>
+                        <p class="text-slate-600 text-sm">
+                            アラブ諸国として初めてAIに関するグローバル・パートナーシップ(GPAI)に参加。ユネスコ主催のICAIREをリヤドで開催するなど、国際社会での存在感を拡大。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="text-center py-12 border-t border-slate-200 mt-12 fade-in">
+            <p class="text-xl text-slate-700 font-medium max-w-3xl mx-auto italic">
+                「この分野におけるサウジアラビアの軌跡は、経済成長と女性のエンパワーメントが同じ目標であるという明確な確信の上に築かれた、世界でも最も速い変革のひとつです。」
+            </p>
+            <p class="text-slate-500 mt-4 font-bold">— 記事総括より</p>
+        </section>
+
+
+    </main>
+
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+        <p>Source: Arab News Report "「世界が学ぶべきモデル」：新世代の女性AIリーダーを育成するサウジアラビアの戦略的推進力"</p>
+        <p class="mt-2"> Interactive Summary Dashboard </p>
+    </footer>
+
+
+    <script>
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+
+
+        function toggleDetails(id) {
+            const el = document.getElementById(id);
+            if(el.style.opacity === '0.5') {
+                 el.style.opacity = '1';
+                 el.style.fontWeight = 'normal';
+            } else {
+                 el.style.opacity = '0.5';
+                 el.style.fontWeight = 'bold';
+                 setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.fontWeight = 'normal';
+                 }, 300);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            Chart.defaults.font.family = "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif";
+            Chart.defaults.color = '#64748b';
+
+
+            const ctxGlobal = document.getElementById('globalGapChart').getContext('2d');
+            new Chart(ctxGlobal, {
+                type: 'doughnut',
+                data: {
+                    labels: ['女性専門家', '男性専門家'],
+                    datasets: [{
+                        data: [22, 78],
+                        backgroundColor: [
+                            '#10b981', 
+                            '#cbd5e1'  
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            const ctxLabor = document.getElementById('laborForceChart').getContext('2d');
+            new Chart(ctxLabor, {
+                type: 'bar',
+                data: {
+                    labels: ['改革前 (2016頃)', 'Vision 2030 目標', '現在 (2025年)'],
+                    datasets: [{
+                        label: '女性の労働参加率 (%)',
+                        data: [22, 30, 36],
+                        backgroundColor: [
+                            '#94a3b8', 
+                            '#34d399', 
+                            '#059669'  
+                        ],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 50,
+                            grid: {
+                                color: '#f1f5f9',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
